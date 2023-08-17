@@ -38,7 +38,7 @@ namespace GALAXIAN
 
 
             // размеры клиентской области формы (того участка, на котором размещаются ЭУ)
-            ClientSize = new Size((columns * pictureSize) + 160, rows * pictureSize);
+            ClientSize = new Size((columns * pictureSize), rows * pictureSize);
 
             StartPosition = FormStartPosition.CenterScreen;
         }

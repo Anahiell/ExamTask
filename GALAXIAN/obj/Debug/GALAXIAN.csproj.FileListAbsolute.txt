@@ -10,3 +10,14 @@ C:\Users\Monkiell\source\repos\GALAXIAN\GALAXIAN\obj\Debug\GALAXIAN.exe
 C:\Users\Monkiell\source\repos\GALAXIAN\GALAXIAN\obj\Debug\GALAXIAN.pdb
 C:\Users\Monkiell\source\repos\GALAXIAN\GALAXIAN\obj\Debug\GALAXIAN.Form1.resources
 C:\Users\Monkiell\source\repos\GALAXIAN\GALAXIAN\obj\Debug\GALAXIAN.Form2.resources
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\bin\Debug\GALAXIAN.exe.config
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\bin\Debug\GALAXIAN.exe
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\bin\Debug\GALAXIAN.pdb
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.csproj.AssemblyReference.cache
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.Form1.resources
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.Form2.resources
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.Properties.Resources.resources
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.csproj.GenerateResource.cache
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.csproj.CoreCompileInputs.cache
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.exe
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.pdb
