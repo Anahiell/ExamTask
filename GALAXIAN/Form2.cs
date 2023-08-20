@@ -16,9 +16,8 @@ namespace GALAXIAN
     {
         private Form1 parentForm;
         private int selectedTheme; // Переменная для выбранной темы
-        private Level gameLevel; // Экземпляр класса Level
+        private Level gameLevel; 
 
-        private Timer gameTimer; // Таймер для обновления игровой логики
 
         public Form2(GALAXIAN.Form1 parent, int selectedTheme)
         {
@@ -31,43 +30,21 @@ namespace GALAXIAN
 
             parentForm = parent;
         }
-
-        // ... остальной код вашей формы
-
         private void InitializeGame()
         {
-            // Создание экземпляра класса Level
+            // экземпляра класса Level
             gameLevel = new Level(this, this.Width, this.Height, selectedTheme);
-
-            // Создание и настройка таймера для обновления игровой логики
-            gameTimer = new Timer();
-            gameTimer.Interval = 33; // Интервал в миллисекундах (около 30 FPS)
-            gameTimer.Tick += GameTimer_Tick; // Привязка обработчика события
-            gameTimer.Start(); // Запуск таймера
         }
-       
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             Graphics g = e.Graphics;
-
-            // Отрисовка остальных объектов, как в вашем коде
-
-            // Отрисовка врагов
             gameLevel.Draw(g);
         }
-
-        private void GameTimer_Tick(object sender, EventArgs e)
-        {
-           
-            
-        }
-
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)
         {
             parentForm.Show();
         }
-
         private void Form2_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)

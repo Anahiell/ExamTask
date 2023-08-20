@@ -34,41 +34,33 @@ namespace GALAXIAN
             button_EXIT.Font = new Font("Arial", 12, FontStyle.Bold);
             button_Theme.Font = new Font("Arial", 12, FontStyle.Bold);
             button_Theme.Text = $"THEME\n{selectedTheme}";
-
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
             GALAXIAN.Form2 form2 = new GALAXIAN.Form2(this, selectedTheme); // Передаем this (Form1) как родительскую форму
             form2.Show(); // Показываем Form2
             this.Hide();
         }
-
         private void button3_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
-
         private void button_Sond_Click(object sender, EventArgs e)
         {
             if (isMusicPlaying)
             {
-                // Остановить музыку
-                // Ваш код для остановки музыки
+                // стопить музыку
+                //тут код для музыч
                 isMusicPlaying = false;
                 button_Sond.BackgroundImage = Properties.Resources.noizOFF;
             }
             else
             {
-                // Включить музыку
-                // Ваш код для включения музыки
+                //вкл муз
                 isMusicPlaying = true;
                 button_Sond.BackgroundImage = Properties.Resources.noizON;
             }
         }
-
-
         private void button_Theme_Click(object sender, EventArgs e)
         {
             if (selectedTheme == 1)

@@ -12,7 +12,6 @@ namespace GALAXIAN
         private System.Drawing.Image bulletImage;
         public int X { get; private set; }
         public int Y { get; set; }
-
         public Bullets(int startX, int startY)
         {
             X = startX;
@@ -21,10 +20,9 @@ namespace GALAXIAN
         }
         public void Update()
         {
-            Y -= 10; // Измените это значение в зависимости от скорости пули
+            Y -= 10; //скорость пули
         }
-
-        public System.Drawing.Image GetImage() // Добавляем метод для получения изображения пули
+        public System.Drawing.Image GetImage() 
         {
             return bulletImage;
         }
