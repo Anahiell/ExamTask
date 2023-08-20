@@ -4,18 +4,22 @@ using System.Windows.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing.Drawing2D;
 
 internal class Level
 {
     public int CharacterPositionX { get; set; }
     public int CharacterPositionY { get; set; }
-    private Point playerPosition; // Текущая позиция игрока
+    private TileGraphics player; // Текущая позиция игрока
+
+    private HashSet<TileGraphics> enemyse;
+
+    private int enemyMoveDirection = 1; // 1 для движения вправо, -1 для движения влево
+    private int enemyMoveTicks = 0; // Счетчик для определения, когда враги должны менять направление
+    private int enemyMoveSpeedDown = 1;
 
     int height;
     int width;
-
-    int enemyMoveDown;//враги приближаются
-    int enemySpeed;//скорость врагов
 
     private Bullets bullet;//Пуля
     private bool isBulletFired = false; // Переменная для отслеживания состояния пули
@@ -23,12 +27,7 @@ internal class Level
     private int currentLevel = 1; // начальный уровень
     private int initialEnemyCount = 5; // начальное количество врагов
 
-    private List<Point> enemyPositions; // Хранит позиции врагов
-    private Timer enemyTimer; // Таймер для движения врагов
     private Timer graphicsUpdateTimer; // таймер для графики
-
-    public TileGraphics[,] objects;
-    public PictureBox[,] images;
 
     public static Random r = new Random();
 
@@ -42,270 +41,293 @@ internal class Level
         TileGraphics.SetTheme(selectedTheme);
 
         CharacterPositionX = 7;
-        CharacterPositionY = height-3;
-        playerPosition = new Point(7, height - 3);
+        CharacterPositionY = height - 3;
+        player = new TileGraphics(TileGraphics.GraphicType.PLAYER);
+        player.Pos = new Point(7, height - 3);
 
-        objects = new TileGraphics[this.height, this.width];
-        images = new PictureBox[this.height, this.width];
+        enemyse = new HashSet<TileGraphics>(); // Инициализируем HashSet
 
-        enemyMoveDown = 0;
-        enemySpeed = 1500;
-
+        for (int i = 0; i < initialEnemyCount; i++)
+        {
+            TileGraphics enemy = new TileGraphics(TileGraphics.GraphicType.ENEMY); // Создаем экземпляр врага
+            enemyse.Add(enemy); // Добавляем его в HashSet
+        }
         graphicsUpdateTimer = new Timer();
-        graphicsUpdateTimer.Interval = 33;
+        graphicsUpdateTimer.Interval = 100; // установите желаемый интервал обновления
         graphicsUpdateTimer.Tick += GraphicsUpdateTimer_Tick;
-        enemyTimer = new Timer();
-        enemyTimer.Interval = enemySpeed;
-        enemyTimer.Tick += EnemyTimer_Tick;
-
+        graphicsUpdateTimer.Start();
         Generate();
     }
+    public void DrawEnemies(Graphics g)
+    {
+        foreach (var enemy in enemyse)
+        {
+            // Проверка и коррекция положения врага, чтобы они не выходили за границы формы
+            if (enemy.Pos.X < 0)
+            {
+                enemy.Pos = new Point(0, enemy.Pos.Y);
+            }
+            else if (enemy.Pos.X > width - enemy.Width)
+            {
+                enemy.Pos = new Point(width - enemy.Width, enemy.Pos.Y);
+            }
+            if (TileGraphics.Theme == 2)
+            {
+                Image enemyImage = enemy.texture;
 
+                // Создаем матрицу вращения
+                Matrix rotationMatrix = new Matrix();
+                rotationMatrix.RotateAt(enemy.rotationAngle, new PointF(enemy.Pos.X + enemy.Width / 2, enemy.Pos.Y + enemy.Height / 2));
+
+                // Применяем вращение к изображению врага
+                g.Transform = rotationMatrix;
+
+                // Рисуем изображение врага
+                g.DrawImage(enemyImage, enemy.Pos.X, enemy.Pos.Y, enemy.Width, enemy.Height);
+
+                // Сбрасываем любые трансформации
+                g.ResetTransform();
+            }
+            else
+            {
+                g.DrawImage(enemy.texture, enemy.Pos.X, enemy.Pos.Y, enemy.Width, enemy.Height);
+            }
+
+            g.DrawImage(enemy.texture, enemy.Pos.X, enemy.Pos.Y, enemy.Width, enemy.Height);
+        }
+    }
+    private void DrawPlayer(Graphics g)
+    {
+        // Отрисовка игрока
+        g.DrawImage(player.texture, player.Pos.X, player.Pos.Y, player.Width, player.Height);
+    }
+
+    public void Draw(Graphics g)
+    {
+        // Отрисовка врагов
+        DrawEnemies(g);
+
+        // Отрисовка игрока
+        DrawPlayer(g);
+
+        if (bullet != null)
+        {
+            g.DrawImage(bullet.GetImage(), bullet.X, bullet.Y);
+        } // Измените на вашу графику пули
+    }
     void Generate()
     {
-        enemyPositions = new List<Point>(initialEnemyCount);
-       
-        for (int y = 0; y < height; y++)
+        foreach (var enemy in enemyse)
         {
-            for (int x = 0; x < width; x++)
+            int randomX, randomY;
+            do
             {
-                TileGraphics.GraphicType current = TileGraphics.GraphicType.SPACE;
+                randomX = r.Next(0, width);
+                randomY = r.Next(0, height / 2);
+            } while (enemyse.Any(e => Math.Abs(e.Pos.X - randomX) < enemy.Width && Math.Abs(e.Pos.Y - randomY) < enemy.Height));
 
-                if (y < (height - 2) / 2)
-                {
-                    if (r.Next(20) == 0)
-                    {
-                        if (initialEnemyCount > enemyPositions.Count)
-                        {
-                            current = TileGraphics.GraphicType.ENEMY_1; // Вверху враги
-                            enemyPositions.Add(new Point(x, y));//записываем позицию врага
-                        }
-                    }
-                }
-                else if (y == CharacterPositionY && x == CharacterPositionX)
-                {
-                    current = TileGraphics.GraphicType.PLAYER_1; // Игрок
-                }
-                objects[y, x] = new TileGraphics(current);
-                images[y, x] = new PictureBox();
-                images[y, x].Location = new Point(x * 32, y * 32);
-                images[y, x].Size = new Size(32, 32);
-                images[y, x].Parent = parent;
-                images[y, x].BackgroundImage = objects[y, x].texture;
-            }
+            enemy.Pos = new Point(randomX, randomY);
         }
-        enemyTimer.Interval = enemySpeed; // Интервал движения врагов и пули
-        enemyTimer.Start();
-        graphicsUpdateTimer.Interval = 33; // Примерно 30 кадров в секунду 
-        graphicsUpdateTimer.Start();
+        player.Pos = new Point(CharacterPositionX * player.Height, height - player.Width - 60);
     }
-    private void Paus()
+
+    private void MoveEnemies()
     {
-        enemyTimer.Stop();
-        graphicsUpdateTimer.Stop();
-    }
-    private void Resume()
-    {
-        enemyTimer.Start();
-        graphicsUpdateTimer.Start();
-    }
-    private void Retry()
-    {
-        enemyMoveDown = 0;
-        enemySpeed = 1500;
-        initialEnemyCount = 5;
-        foreach (var item in enemyPositions)
+        foreach (var enemy in enemyse)
         {
-            UpdateGraphics(item.Y, item.X,TileGraphics.GraphicType.SPACE);
-        
+            // Случайное движение влево или вправо
+            int randomMove = r.Next(2); // Генерируем 0 или 1
+            if (randomMove == 0)
+            {
+                enemy.Pos = new Point(enemy.Pos.X + 5, enemy.Pos.Y);
+            }
+            else
+            {
+                enemy.Pos = new Point(enemy.Pos.X - 5, enemy.Pos.Y);
+            }
+
+            // Проверка и корректировка положения врага по горизонтали
+            if (enemy.Pos.X <= 0 || enemy.Pos.X >= width - enemy.Width)
+            {
+                enemyMoveDirection *= -1; // Изменение направления движения врагов
+                enemy.Pos = new Point(enemy.Pos.X, enemy.Pos.Y);
+            }
+
+            // Случайное опускание вниз
+            int randomDown = r.Next(2); // Генерируем 
+            if (randomDown == 0)
+            {
+                enemy.Pos = new Point(enemy.Pos.X, enemy.Pos.Y + enemyMoveSpeedDown);
+            }
+            enemy.rotationAngle += 5;
         }
-        enemyPositions = new List<Point>(initialEnemyCount);
-        Generate();
     }
+
     private void NextLevel()
     {
-        currentLevel += 1;
-        initialEnemyCount += currentLevel; // увеличиваем количество врагов
-        enemySpeed = Math.Max(enemySpeed - 100, 100); // увеличиваем скорость врагов
-        
-        for (int y = 0; y < height / 2; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                TileGraphics.GraphicType current = TileGraphics.GraphicType.SPACE;
-                if (y < (height - 2) )
-                {
-                    
-                    if (r.Next(20) == 0)
-                    {
-                        if (initialEnemyCount > enemyPositions.Count)
-                        {
-                            current = TileGraphics.GraphicType.ENEMY_1; // Вверху враги
-                            enemyPositions.Add(new Point(x, y));//записываем позицию врага
-                        }
-                    }
-                }
-                objects[y, x] = new TileGraphics(current);
-            }
+        currentLevel++; // Увеличиваем уровень
 
+        // Увеличиваем количество врагов и их скорость
+        initialEnemyCount += 2; // Например, увеличим на 2
+        enemyMoveSpeedDown += 1; // Например, увеличим на 1
+
+        // Создаем новых врагов
+        for (int i = 0; i < initialEnemyCount; i++)
+        {
+            TileGraphics enemy = new TileGraphics(TileGraphics.GraphicType.ENEMY); // Создаем экземпляр врага
+            enemyse.Add(enemy); // Добавляем его в HashSet
         }
+
+        // Генерируем начальные позиции для новых врагов
+        Generate();
     }
+
     public void Update()
     {
-        if (enemyPositions.Count == 0)
+        MoveEnemies();
+
+        if (bullet != null)
         {
-            Paus();
-            DialogResult result = MessageBox.Show($"Level {currentLevel}", "Next Level", MessageBoxButtons.OK);
-            if (result == DialogResult.OK)
-            {
-                NextLevel();
-                Resume();
+            // Обновление положения пули
+            bullet.Update();
 
-            }
-        }
-        if (isBulletFired)
-        {
-            int prevBulletY = bullet.Y; // Сохраняем предыдущую позицию пули
-            bullet.Y -= 1; // Перемещаем пулю вверх на 1
-            CheckCollisions(); // Проверка столкновений пули с врагами
-
-            // Обновление изображения позади пули
-            if (prevBulletY >= 0 && prevBulletY < height)
+            // Проверка столкновения пули с врагами
+            foreach (var enemy in enemyse.ToList())
             {
-                objects[prevBulletY, bullet.X] = new TileGraphics(TileGraphics.GraphicType.SPACE);
-                UpdateGraphics(prevBulletY, bullet.X, TileGraphics.GraphicType.SPACE);
+                Rectangle enemyRect = new Rectangle(enemy.Pos.X, enemy.Pos.Y, enemy.Width, enemy.Height);
+                Rectangle bulletRect = new Rectangle(bullet.X, bullet.Y, bullet.GetImage().Height, bullet.GetImage().Width);
+
+                if (enemyRect.IntersectsWith(bulletRect))
+                {
+                    enemyse.Remove(enemy); // Удаление врага, столкнувшегося с пулей
+                    bullet = null; // Удаление пули
+                    isBulletFired = false;
+                    break;
+                }
             }
 
-            if (bullet.Y >= 0) // Проверка на нахождение пули внутри границ экрана
+            // Проверка, достигла ли пуля края карты
+            if (bullet != null && bullet.Y < 0)
             {
-                // Обновление изображения пули
-                objects[bullet.Y, bullet.X] = new TileGraphics(TileGraphics.GraphicType.BULLET);
-            }
-
-            // Если пуля достигла верхней границы, сбрасываем состояние
-            if (bullet.Y == 0)
-            {
-                objects[bullet.Y, bullet.X] = new TileGraphics(TileGraphics.GraphicType.SPACE);
+                bullet = null; // Удаление пули
                 isBulletFired = false;
             }
         }
 
+        // Проверка столкновения врагов с игроком
+        CheckCollisions();
+    }
+    private void Lost()
+    {
+        graphicsUpdateTimer.Stop(); // Остановка игрового таймера
 
-        // Обновление графики 
-        for (int y = 0; y < height; y++)
+        // Ваш код для обработки проигрыша
+        DialogResult result = MessageBox.Show("Вы проиграли! Хотите начать заново?", "Поражение", MessageBoxButtons.YesNo);
+
+        if (result == DialogResult.Yes)
         {
-            for (int x = 0; x < width; x++)
-            {
-                images[y, x].Image = objects[y, x].texture;
-            }
+            Generate();
+            graphicsUpdateTimer.Start();
+        }
+        else
+        {
+            // Закрыть форму
+            parent.Close();
         }
     }
     private void FireBullet()
     {
-        bullet = new Bullets(playerPosition.X, playerPosition.Y - 1);
+        bullet = new Bullets(player.Pos.X + player.Width / 2, player.Pos.Y - 1);
     }
     private void CheckCollisions()
     {
-        if (bullet != null && bullet.Y > 0 && bullet.Y - 1 >= 0 && bullet.Y - 1 < height)
+
+        Rectangle playerRect = new Rectangle(player.Pos.X, player.Pos.Y, player.Width, player.Height);
+
+        // Проверка столкновений пуль с врагами
+        foreach (var enemy in enemyse.ToList())
         {
-            var enemiesToRemove = enemyPositions
-                .Where(enemyPos => (bullet.X == enemyPos.X && bullet.Y - 1 == enemyPos.Y) ||
-                                   (bullet.X == enemyPos.X && bullet.Y == enemyPos.Y))
-                .ToList();
-
-            foreach (var enemyToRemove in enemiesToRemove)
+            Rectangle enemyRect = new Rectangle(enemy.Pos.X, enemy.Pos.Y, enemy.Width, enemy.Height);
+            if (bullet != null)
             {
-                enemyPositions.Remove(enemyToRemove);
-                objects[enemyToRemove.Y, enemyToRemove.X] = new TileGraphics(TileGraphics.GraphicType.SPACE);
-                UpdateGraphics(enemyToRemove.Y, enemyToRemove.X, TileGraphics.GraphicType.SPACE);
-            }
-        }
-    }
-    private void EnemyTimer_Tick(object sender, EventArgs e)
-    {
-        enemyMoveDown++;
-        List<Point> newEnemyPositions = new List<Point>();
-
-        foreach (Point enemyPos in enemyPositions)
-        {
-            int newY = enemyPos.Y + (enemyMoveDown == 1 ? 1 : 0);
-            int newX = r.Next(2) == 0 ? Math.Max(0, enemyPos.X - 1) : Math.Min(width - 1, enemyPos.X + 1);
-
-            if (newY == height - 4)
-            {
-                LoseGame();
-                return;
-            }
-
-            if (newX >= 0 && newX < width && objects[newY, newX].type != TileGraphics.GraphicType.ENEMY_1)
-            {
-                UpdateGraphics(enemyPos.Y, enemyPos.X, TileGraphics.GraphicType.SPACE);
-                UpdateGraphics(newY, newX, TileGraphics.GraphicType.ENEMY_1);
-                newEnemyPositions.Add(new Point(newX, newY));
-            }
-            else
-            {
-                newEnemyPositions.Add(enemyPos);
+                Rectangle bulletRect = new Rectangle(bullet.X, bullet.Y, bullet.GetImage().Width, bullet.GetImage().Height);
+                if (bulletRect.IntersectsWith(enemyRect))
+                {
+                    enemyse.Remove(enemy);
+                    bullet = null;
+                    isBulletFired = false;
+                    break;
+                }
             }
         }
 
-        enemyPositions = newEnemyPositions;
-        if (enemyMoveDown >= 1)
+        // Проверка столкновения игрока с врагами
+        foreach (var enemy in enemyse.ToList())
         {
-            enemyMoveDown = 0;
+            Rectangle enemyRect = new Rectangle(enemy.Pos.X, enemy.Pos.Y, enemy.Width, enemy.Height);
+            if (enemyRect.IntersectsWith(playerRect))
+            {
+                Lost();
+                break;
+            }
+        }
+
+        // Проверка столкновения врагов с нижней границей
+        foreach (var enemy in enemyse.ToList())
+        {
+            if (enemy.Pos.Y + enemy.Height >= height)
+            {
+                enemyse.Remove(enemy);
+                Lost();
+                break;
+            }
         }
     }
     private void GraphicsUpdateTimer_Tick(object sender, EventArgs e)
     {
-        Update(); // Вызывайте метод обновления графики здесь
-    }
-    private void UpdateGraphics(int y, int x, TileGraphics.GraphicType newType)
-    {
-        objects[y, x] = new TileGraphics(newType);
-        images[y, x].Image = objects[y, x].texture;
-    }
-    public void LoseGame()
-    {
-        Paus();
-      
-        DialogResult result = MessageBox.Show("You lost! Do you want to retry the level?", "Game Over", MessageBoxButtons.YesNo);
-        if (result == DialogResult.Yes)
+        Update();
+        parent.Invalidate(); // Перерисовать форму
+        if (enemyse.Count == 0)
         {
-            Retry();
-            Resume();
-        }
-        else if (result == DialogResult.No)
-        {
-            // Вернуться в главное меню
-            parent.Close();
+            NextLevel();
         }
     }
-
     public void MovePlayer(Keys type)
     {
-        int newPlayerX = playerPosition.X;
-        int newPlayerY = playerPosition.Y;
+        int moveDistance = 20; // Расстояние перемещения игрока
 
         switch (type)
         {
             case Keys.Left:
                 {
-                    newPlayerX = Math.Max(0, playerPosition.X - 1); // Движение влево
+                    if (player.Pos.X - moveDistance >= 0) // Проверка на выход за левую границу
+                    {
+                        player.Pos = new Point(player.Pos.X - moveDistance, player.Pos.Y);
+                    }
                     break;
                 }
             case Keys.Right:
                 {
-                    newPlayerX = Math.Min(width - 1, playerPosition.X + 1); // Движение вправо
+                    if (player.Pos.X + player.Width + moveDistance <= width - 20) // Проверка на выход за правую границу
+                    {
+                        player.Pos = new Point(player.Pos.X + moveDistance, player.Pos.Y);
+                    }
                     break;
                 }
             case Keys.Up:
                 {
-                    newPlayerY = Math.Max(height - 3, playerPosition.Y - 1); // Движение вверх, но не выше трех клеток
+                    if (player.Pos.Y - moveDistance >= 0) // Проверка на выход за верхнюю границу
+                    {
+                        player.Pos = new Point(player.Pos.X, player.Pos.Y - moveDistance);
+                    }
                     break;
                 }
             case Keys.Down:
                 {
-                    newPlayerY = Math.Min(height - 1, playerPosition.Y + 1); // Движение вниз
+                    if (player.Pos.Y + player.Height + moveDistance <= height - 20) // Проверка на выход за нижнюю границу
+                    {
+                        player.Pos = new Point(player.Pos.X, player.Pos.Y + moveDistance);
+                    }
                     break;
                 }
             case Keys.Space:
@@ -321,14 +343,6 @@ internal class Level
             default:
                 break;
         }
-
-        // Проверяем, что новая позиция не выходит за границы
-        if (newPlayerX >= 0 && newPlayerX < width && newPlayerY >= height - 3 && newPlayerY < height)
-        {
-            UpdateGraphics(playerPosition.Y, playerPosition.X, TileGraphics.GraphicType.SPACE); // Убираем старую позицию игрока
-            UpdateGraphics(newPlayerY, newPlayerX, TileGraphics.GraphicType.PLAYER_1); // Устанавливаем новую позицию игрока
-            playerPosition.X = newPlayerX; // Обновляем текущую позицию игрока
-            playerPosition.Y = newPlayerY;
-        }
+        parent.Invalidate();
     }
 }

@@ -129,5 +129,17 @@
   <ItemGroup>
     <None Include="Resources\noizON.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enemy_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enemy_1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

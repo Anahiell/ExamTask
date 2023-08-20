@@ -21,3 +21,4 @@ C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\G
 C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.csproj.CoreCompileInputs.cache
 C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.exe
 C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.pdb
+C:\Users\Monkiell\OneDrive\Рабочий стол\exanTask\GALAXIAN\obj\Debug\GALAXIAN.csproj.SuggestedBindingRedirects.cache

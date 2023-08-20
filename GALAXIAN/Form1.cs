@@ -9,6 +9,7 @@ namespace GALAXIAN
 {
     public partial class Form1 : Form
     {
+        private bool isMusicPlaying = true; // По умолчанию музыка включена
         public Form1()
         {
             InitializeComponent();
@@ -38,28 +39,35 @@ namespace GALAXIAN
 
         private void button1_Click(object sender, EventArgs e)
         {
-            GALAXIAN.Form2 form2 = new GALAXIAN.Form2(this,selectedTheme); // Передаем this (Form1) как родительскую форму
+            GALAXIAN.Form2 form2 = new GALAXIAN.Form2(this, selectedTheme); // Передаем this (Form1) как родительскую форму
             form2.Show(); // Показываем Form2
             this.Hide();
         }
-       
+
         private void button3_Click(object sender, EventArgs e)
         {
-
-
+            this.Close();
         }
+
 
         private void button_Sond_Click(object sender, EventArgs e)
         {
-            if(button_Sond.BackgroundImage == new Bitmap(Properties.Resources.noizON))
+            if (isMusicPlaying)
             {
-                button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizOFF);
+                // Остановить музыку
+                // Ваш код для остановки музыки
+                isMusicPlaying = false;
+                button_Sond.BackgroundImage = Properties.Resources.noizOFF;
             }
             else
             {
-                button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizON);
+                // Включить музыку
+                // Ваш код для включения музыки
+                isMusicPlaying = true;
+                button_Sond.BackgroundImage = Properties.Resources.noizON;
             }
         }
+
 
         private void button_Theme_Click(object sender, EventArgs e)
         {

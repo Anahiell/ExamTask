@@ -10,28 +10,27 @@ namespace GALAXIAN
 {
     internal class TileGraphics
     {
-        public enum GraphicType { ENEMY_1, PLAYER_1, SPACE, BLOCK, BULLET };
+        public enum GraphicType { ENEMY, PLAYER, BULLET };
 
 
         public static Bitmap[] var1 = {
             Properties.Resources.enemy_1,
             Properties.Resources.player_1,
-            Properties.Resources.space,
-            Properties.Resources.block,
             Properties.Resources.bullet
         };
         public static Bitmap[] var2 = {
             Properties.Resources.enemy_2,
             Properties.Resources.player_2,
-            Properties.Resources.space,
-            Properties.Resources.block,
             Properties.Resources.bullet
         };
         public static Bitmap[] images = var1;
         public GraphicType type;
-        public int Width { get; } = 32;
-        public int Height { get; } = 32;
+        public int Width { get; } = 50;//настройка размера картинки
+        public int Height { get; } = 50;//такаяже настройка
         public Image texture;
+        public static int Theme;
+        public float rotationAngle = 0.0f;
+        public Point Pos { get; set; }
         public TileGraphics(GraphicType type)
         {
             this.type = type;
@@ -44,11 +43,13 @@ namespace GALAXIAN
                 case 1:
                     {
                         images = var1;
+                        Theme = 1;
                         break;
                     }
                 case 2:
                     {
                         images = var2;
+                        Theme = 2;
                         break;
                     }
                 default:

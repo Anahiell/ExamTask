@@ -19,8 +19,11 @@ namespace GALAXIAN
             Y = startY;
             bulletImage = new Bitmap(Properties.Resources.bullet); // Сохраните изображение пули в поле
         }
+        public void Update()
+        {
+            Y -= 10; // Измените это значение в зависимости от скорости пули
+        }
 
-        
         public System.Drawing.Image GetImage() // Добавляем метод для получения изображения пули
         {
             return bulletImage;

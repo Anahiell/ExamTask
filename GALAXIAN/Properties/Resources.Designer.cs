@@ -73,16 +73,6 @@ namespace GALAXIAN.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap block {
-            get {
-                object obj = ResourceManager.GetObject("block", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap bullet {
             get {
                 object obj = ResourceManager.GetObject("bullet", resourceCulture);
@@ -166,16 +156,6 @@ namespace GALAXIAN.Properties {
         internal static System.Drawing.Bitmap player_2 {
             get {
                 object obj = ResourceManager.GetObject("player_2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap space {
-            get {
-                object obj = ResourceManager.GetObject("space", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
