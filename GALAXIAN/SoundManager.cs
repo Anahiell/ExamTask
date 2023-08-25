@@ -34,7 +34,7 @@ namespace GALAXIAN
             waveOutEvents = new Dictionary<SoundType, WaveOutEvent>();
             soundDictionary = new Dictionary<SoundType, Mp3FileReader>();
             isSoundEnabled = onOFF;
-            LoadSounds(); // Загрузка всех звуков
+            LoadSounds(); // загрузка всех звуков
         }
 
         private void LoadSounds()
@@ -54,7 +54,7 @@ namespace GALAXIAN
             {
                 var waveOutEvent = waveOutEvents[soundType];
 
-                waveOutEvent.Stop(); // Остановить предыдущее воспроизведение
+                waveOutEvent.Stop(); // стопить предыдущие воспроизведение
                 waveOutEvent.Init(soundDictionary[soundType]);
                 soundDictionary[soundType].Position = 0;
                 waveOutEvent.Play();

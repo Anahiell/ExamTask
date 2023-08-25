@@ -10,7 +10,7 @@ namespace GALAXIAN
 {
     public partial class Form1 : Form
     {
-        private bool isMusicPlaying = false; // По умолчанию музыка включена
+        private bool isMusicPlaying = false; //  умолчанию музыка выкл
         private SoundManager soundManager;
 
         public Form1()
@@ -61,7 +61,7 @@ namespace GALAXIAN
                 isMusicPlaying = true;
                 button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizON);
                 soundManager.PlaySound(SoundManager.SoundType.Music);
-                trackBar1.Value = trackBar1.Maximum; // Устанавливаем значение трекбара в текущую громкость
+                trackBar1.Value = trackBar1.Maximum; //  трекбар в текущую громкость
                 soundManager.SetVolume(1);
             }
             else
@@ -70,7 +70,7 @@ namespace GALAXIAN
                 isMusicPlaying = false;
                 button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizOFF);
                 soundManager.SetVolume(0);
-                trackBar1.Value = 0; // Устанавливаем значение трекбара в 0
+                trackBar1.Value = 0; // трекбар в 0
             }
         }
 
@@ -79,7 +79,7 @@ namespace GALAXIAN
             if (trackBar1.Value > 0)
             {
                 isMusicPlaying = true;
-                soundManager.SetVolume((double)trackBar1.Value / trackBar1.Maximum); // Установить громкость на основе значения трекбара
+                soundManager.SetVolume((double)trackBar1.Value / trackBar1.Maximum); // установка на основе трекбара
                 button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizON);
             }
             else
@@ -92,7 +92,7 @@ namespace GALAXIAN
             {
                 isMusicPlaying = true;
                 soundManager.PlaySound(SoundManager.SoundType.Music);
-                soundManager.SetVolume((double)trackBar1.Value / trackBar1.Maximum); // Установить громкость на основе значения трекбара
+                soundManager.SetVolume((double)trackBar1.Value / trackBar1.Maximum);
                 button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizON);
             }
         }
