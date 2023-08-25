@@ -4,15 +4,19 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace GALAXIAN
 {
     public partial class Form1 : Form
     {
-        private bool isMusicPlaying = true; // По умолчанию музыка включена
+        private bool isMusicPlaying = false; // По умолчанию музыка включена
+        private SoundManager soundManager;
+
         public Form1()
         {
             InitializeComponent();
+            soundManager = new SoundManager(isMusicPlaying);
         }
         private int selectedTheme = 1;
         private void Form1_Load(object sender, EventArgs e)
@@ -34,11 +38,15 @@ namespace GALAXIAN
             button_EXIT.Font = new Font("Arial", 12, FontStyle.Bold);
             button_Theme.Font = new Font("Arial", 12, FontStyle.Bold);
             button_Theme.Text = $"THEME\n{selectedTheme}";
+
+            trackBar1.BackColor = Color.Aqua;
+            trackBar1.Scroll += new EventHandler(trackBar1_Scroll);
+            this.Text = "GALAXIAN the game";
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            GALAXIAN.Form2 form2 = new GALAXIAN.Form2(this, selectedTheme); // Передаем this (Form1) как родительскую форму
-            form2.Show(); // Показываем Form2
+            GALAXIAN.Form2 form2 = new GALAXIAN.Form2(this, selectedTheme, soundManager);
+            form2.Show();
             this.Hide();
         }
         private void button3_Click(object sender, EventArgs e)
@@ -47,20 +55,48 @@ namespace GALAXIAN
         }
         private void button_Sond_Click(object sender, EventArgs e)
         {
-            if (isMusicPlaying)
+            if (!isMusicPlaying)
             {
-                // стопить музыку
-                //тут код для музыч
-                isMusicPlaying = false;
-                button_Sond.BackgroundImage = Properties.Resources.noizOFF;
+                soundManager.IsSoundEnabled = true;
+                isMusicPlaying = true;
+                button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizON);
+                soundManager.PlaySound(SoundManager.SoundType.Music);
+                trackBar1.Value = trackBar1.Maximum; // Устанавливаем значение трекбара в текущую громкость
+                soundManager.SetVolume(1);
             }
             else
             {
-                //вкл муз
-                isMusicPlaying = true;
-                button_Sond.BackgroundImage = Properties.Resources.noizON;
+                soundManager.IsSoundEnabled = false;
+                isMusicPlaying = false;
+                button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizOFF);
+                soundManager.SetVolume(0);
+                trackBar1.Value = 0; // Устанавливаем значение трекбара в 0
             }
         }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            if (trackBar1.Value > 0)
+            {
+                isMusicPlaying = true;
+                soundManager.SetVolume((double)trackBar1.Value / trackBar1.Maximum); // Установить громкость на основе значения трекбара
+                button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizON);
+            }
+            else
+            {
+                isMusicPlaying = false;
+                soundManager.SetVolume(0);
+                button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizOFF);
+            }
+            if (isMusicPlaying == false && trackBar1.Value > 0)
+            {
+                isMusicPlaying = true;
+                soundManager.PlaySound(SoundManager.SoundType.Music);
+                soundManager.SetVolume((double)trackBar1.Value / trackBar1.Maximum); // Установить громкость на основе значения трекбара
+                button_Sond.BackgroundImage = new Bitmap(Properties.Resources.noizON);
+            }
+        }
+
         private void button_Theme_Click(object sender, EventArgs e)
         {
             if (selectedTheme == 1)

@@ -16,24 +16,26 @@ namespace GALAXIAN
     {
         private Form1 parentForm;
         private int selectedTheme; // Переменная для выбранной темы
-        private Level gameLevel; 
+        private Level gameLevel;
 
-
-        public Form2(GALAXIAN.Form1 parent, int selectedTheme)
+        private SoundManager soundManager;
+        public Form2(GALAXIAN.Form1 parent, int selectedTheme, SoundManager soundManager)
         {
             InitializeComponent();
 
             this.selectedTheme = selectedTheme;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
 
-            InitializeGame();
-
             parentForm = parent;
+
+            this.soundManager = soundManager; // Передаем soundManager из Form1
+
+            InitializeGame();
         }
         private void InitializeGame()
         {
             // экземпляра класса Level
-            gameLevel = new Level(this, this.Width, this.Height, selectedTheme);
+            gameLevel = new Level(this, this.Width, this.Height, selectedTheme,soundManager);
         }
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -52,6 +54,47 @@ namespace GALAXIAN
                 Close();
             }
             gameLevel.MovePlayer(e.KeyCode);
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+          
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            if (gameLevel.play_paus == true)
+            {
+                toolStripButton1.Image = new Bitmap(Properties.Resources.play);
+                gameLevel.Paus();
+            }
+            else
+            {
+                toolStripButton1.Image = new Bitmap(Properties.Resources.pause);
+                gameLevel.Play();
+            }
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            if (soundManager.IsSoundEnabled == false)
+            {
+                soundManager.IsSoundEnabled = true;
+                toolStripButton2.Image = new Bitmap(Properties.Resources.noizON);
+                soundManager.PlaySound(SoundManager.SoundType.Music);
+                soundManager.SetVolume(1);
+            }
+            else
+            {
+                soundManager.IsSoundEnabled = false;
+                toolStripButton2.Image = new Bitmap(Properties.Resources.noizOFF);
+                soundManager.SetVolume(0);
+            }
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

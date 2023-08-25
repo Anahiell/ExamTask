@@ -28,69 +28,68 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button_start = new System.Windows.Forms.Button();
             this.button_EXIT = new System.Windows.Forms.Button();
             this.button_Sond = new System.Windows.Forms.Button();
             this.button_Theme = new System.Windows.Forms.Button();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // button_start
             // 
-            this.button_start.Location = new System.Drawing.Point(169, 136);
+            resources.ApplyResources(this.button_start, "button_start");
             this.button_start.Name = "button_start";
-            this.button_start.Size = new System.Drawing.Size(166, 60);
-            this.button_start.TabIndex = 0;
-            this.button_start.Text = "START GAME";
             this.button_start.UseVisualStyleBackColor = true;
             this.button_start.Click += new System.EventHandler(this.button1_Click);
             // 
             // button_EXIT
             // 
-            this.button_EXIT.Location = new System.Drawing.Point(169, 341);
+            resources.ApplyResources(this.button_EXIT, "button_EXIT");
             this.button_EXIT.Name = "button_EXIT";
-            this.button_EXIT.Size = new System.Drawing.Size(166, 58);
-            this.button_EXIT.TabIndex = 0;
-            this.button_EXIT.Text = "EXIT";
             this.button_EXIT.UseVisualStyleBackColor = true;
             this.button_EXIT.Click += new System.EventHandler(this.button3_Click);
             // 
             // button_Sond
             // 
-            this.button_Sond.BackgroundImage = global::GALAXIAN.Properties.Resources.noizON;
-            this.button_Sond.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button_Sond.Location = new System.Drawing.Point(256, 234);
+            this.button_Sond.BackgroundImage = global::GALAXIAN.Properties.Resources.noizOFF;
+            resources.ApplyResources(this.button_Sond, "button_Sond");
             this.button_Sond.Name = "button_Sond";
-            this.button_Sond.Size = new System.Drawing.Size(79, 68);
-            this.button_Sond.TabIndex = 1;
             this.button_Sond.UseVisualStyleBackColor = true;
             this.button_Sond.Click += new System.EventHandler(this.button_Sond_Click);
             // 
             // button_Theme
             // 
-            this.button_Theme.Location = new System.Drawing.Point(169, 234);
+            resources.ApplyResources(this.button_Theme, "button_Theme");
             this.button_Theme.Name = "button_Theme";
-            this.button_Theme.Size = new System.Drawing.Size(81, 68);
-            this.button_Theme.TabIndex = 1;
-            this.button_Theme.Text = "THEME";
             this.button_Theme.UseVisualStyleBackColor = true;
             this.button_Theme.Click += new System.EventHandler(this.button_Theme_Click);
             // 
+            // trackBar1
+            // 
+            this.trackBar1.AllowDrop = true;
+            resources.ApplyResources(this.trackBar1, "trackBar1");
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::GALAXIAN.Properties.Resources.main_menu;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(507, 444);
+            this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.button_Theme);
             this.Controls.Add(this.button_Sond);
             this.Controls.Add(this.button_EXIT);
             this.Controls.Add(this.button_start);
             this.DoubleBuffered = true;
             this.Name = "Form1";
-            this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -101,6 +100,7 @@
         private System.Windows.Forms.Button button_EXIT;
         private System.Windows.Forms.Button button_Sond;
         private System.Windows.Forms.Button button_Theme;
+        private System.Windows.Forms.TrackBar trackBar1;
     }
 }
 

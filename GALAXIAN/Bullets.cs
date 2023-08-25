@@ -9,6 +9,7 @@ namespace GALAXIAN
 {
     internal class Bullets
     {
+        private TileGraphics image = new TileGraphics(TileGraphics.GraphicType.BULLET);
         private System.Drawing.Image bulletImage;
         public int X { get; private set; }
         public int Y { get; set; }
@@ -16,11 +17,11 @@ namespace GALAXIAN
         {
             X = startX;
             Y = startY;
-            bulletImage = new Bitmap(Properties.Resources.bullet); // Сохраните изображение пули в поле
+            bulletImage = image.texture; // Сохраните изображение пули в поле
         }
-        public void Update()
+        public void Update(int bulletSpeed)
         {
-            Y -= 10; //скорость пули
+            Y -= bulletSpeed; //скорость пули
         }
         public System.Drawing.Image GetImage() 
         {

@@ -19,7 +19,7 @@ namespace GALAXIAN.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -73,9 +73,19 @@ namespace GALAXIAN.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bullet {
+        internal static System.Drawing.Bitmap bullet1 {
             get {
-                object obj = ResourceManager.GetObject("bullet", resourceCulture);
+                object obj = ResourceManager.GetObject("bullet1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bullet2 {
+            get {
+                object obj = ResourceManager.GetObject("bullet2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -101,12 +111,12 @@ namespace GALAXIAN.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static System.Drawing.Bitmap hall {
+        internal static byte[] enemy_die {
             get {
-                object obj = ResourceManager.GetObject("hall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                object obj = ResourceManager.GetObject("enemy_die", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -117,6 +127,16 @@ namespace GALAXIAN.Properties {
             get {
                 object obj = ResourceManager.GetObject("main_menu", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Musick {
+            get {
+                object obj = ResourceManager.GetObject("Musick", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -136,6 +156,36 @@ namespace GALAXIAN.Properties {
         internal static System.Drawing.Bitmap noizON {
             get {
                 object obj = ResourceManager.GetObject("noizON", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pause {
+            get {
+                object obj = ResourceManager.GetObject("pause", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] piu {
+            get {
+                object obj = ResourceManager.GetObject("piu", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap play {
+            get {
+                object obj = ResourceManager.GetObject("play", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
